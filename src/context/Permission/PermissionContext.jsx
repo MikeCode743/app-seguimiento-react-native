@@ -1,11 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
-import { AppState, Platform } from "react-native";
+import { AppState } from "react-native";
 import { check, openSettings, PERMISSIONS, request } from "react-native-permissions";
-
-
-// export interface PermissionState {
-//     locationStatus;
-// }
 
 export const permissionsInitState = {
     locationStatus: 'unavailable'
@@ -19,6 +14,26 @@ export const PermissionsProvider = ({ children }) => {
 
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+    const askLocationPermissions = async () => {
+        let permissionsStatus = null;
+        permissionsStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+        // if (permissionsStatus === 'blocked') openSettings();
+        setPermissions({
+            ...permissions,
+            locationStatus: permissionsStatus
+        })
+    }
+
+    const checkLocationPermission = async () => {
+        let permissionStatus;
+        permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+        setPermissions({
+            ...permissions,
+            locationStatus: permissionStatus
+        });
+    }
 
     useEffect(() => {
         const subscription = AppState.addEventListener("change", state => {
@@ -34,30 +49,6 @@ export const PermissionsProvider = ({ children }) => {
         };
     }, []);
 
-    const askLocationPermissions = async () => {
-        let permissionsStatus = null;
-        permissionsStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-        if (permissionsStatus === 'blocked') openSettings();
-        setPermissions({
-            ...permissions,
-            locationStatus: permissionsStatus
-        })
-    }
-
-    const checkLocationPermission = async () => {
-        let permissionStatus;
-
-        if (Platform.OS === 'ios') {
-            permissionStatus = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-        } else {
-            permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-        }
-
-        setPermissions({
-            ...permissions,
-            locationStatus: permissionStatus
-        });
-    }
 
     return (
         <PermissionContext.Provider value={{

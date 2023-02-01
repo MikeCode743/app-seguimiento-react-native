@@ -1,19 +1,27 @@
 import React, { useContext } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { Home } from '../pages/Home';
-import { MapPage } from '../pages/MapPage';
-import { Permission } from '../pages/Permission';
-import { PermissionContext } from '../context/PermissionContext';
+import { Home } from '../views/Home';
+import { MapPage } from '../views/MapPage';
+import { Permission } from '../views/Permission';
+import { PermissionContext } from '../context/Permission/PermissionContext';
 import { Loading } from '../components/Loading';
 
 const Stack = createNativeStackNavigator();
 
-const style = {
+const options = {
     headerShown: false,
-    cardStyle: {
-        backgroundColor: 'blue',
-    }
+    headerMode: 'float',
+    headerTintColor: 'black',
+    headerStyle: {
+        backgroundColor: 'white',
+        elevation: 0,
+    },
+    headerBackAccessibilityLabel: 'Atrás',
+    headerBackTitle: 'Atrás',
+    headerBackTitleVisible: false,
+    
+            //   cardOverlayEnabled: true
 }
 
 export const Navigation = () => {
@@ -26,7 +34,7 @@ export const Navigation = () => {
 
   return (
       <Stack.Navigator
-            screenOptions={style} 
+          screenOptions={options}
        >
 
         {
