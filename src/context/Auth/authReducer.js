@@ -1,35 +1,35 @@
-// generaEstado
+/* eslint-disable prettier/prettier */
 export const authReducer = (state, action) => {
   switch (action.type) {
     case 'signIn':
       return {
         ...state,
-        isLoggedIn: true,
-        username: 'USERNAME',
-        token: 'TOKEN',
-        // username: 'no-username-yet',,
+        autenticado: 'autenticado',
+        token: action.payload.token,
+        mensajeError: '',
       };
 
     case 'logout':
       return {
         ...state,
-        isLoggedIn: false,
-        username: undefined,
+        autenticado: 'no-autenticado',
+        usuario: undefined,
         token: undefined,
-
+        mensajeError: '',
       };
 
-    // case 'changeFavIcon':
-    //   return {
-    //     ...state,
-    //     favoriteIcon: action.payload,,
-    //   };;
-
-    // case 'changeUsername':
-    //   return {
-    //     ...state,
-    //     username: action.payload,,
-    //   };;
+    case 'error':
+      return {
+        ...state,
+        autenticado: false,
+        token: null,
+        mensajeError: action.payload.mensaje,
+      };
+    case 'cleanError':
+    return {
+        ...state,
+        mensajeError: '',
+      };
 
     default:
       return state;

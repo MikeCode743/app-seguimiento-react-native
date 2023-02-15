@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
-import { PermissionContext } from '../context/Permission/PermissionContext';
 
 export const Loading = () => {
 

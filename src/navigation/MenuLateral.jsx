@@ -12,11 +12,9 @@ export const MenuLateral = () => {
 
     return (
         <Drawer.Navigator>
-
-
             <Drawer.Screen name="StackNavigation" component={Navigation} />
             <Drawer.Screen name="MapPage" component={MapPage} />
-                <Drawer.Screen name="ListadoRecorrido" component={ListadoRecorridos} />
+            <Drawer.Screen name="ListadoRecorrido" component={ListadoRecorridos} />
         </Drawer.Navigator>
     );
 }
