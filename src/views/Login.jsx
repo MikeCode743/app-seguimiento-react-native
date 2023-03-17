@@ -1,31 +1,44 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Image, Text, TextInput, ToastAndroid, View } from 'react-native'
-import { styles } from '../styles/style'
-import { Button } from '@rneui/base'
+import { Alert, ImageBackground, StyleSheet, Text, ToastAndroid, View } from 'react-native'
+import { primary, styles } from '../styles/style'
+import { Button, Icon } from '@rneui/base'
 import { AuthContext } from '../context/Auth/AuthContext'
+import { Input } from '@rneui/themed'
 
 export const Login = () => {
 
-  const [email, setEmail] = useState('developer@gmail.com')
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState();
   const [cargando, setCargando] = useState(false)
+  const [validLogin, setvalidLogin] = useState(false)
+  const [emailErrorMessage, setEmailErrorMessage] = useState();
   const { signIn, mensajeError, cleanError, autenticado } = useContext(AuthContext)
+
 
   if (autenticado === 'verificar') {
     return <Loading />;
   }
 
-  const iniciarSesion = () => {
+  const iniciarSesion = async () => {
     try {
       setCargando(true)
-      signIn({ email, password });
+      setvalidLogin(false)
+
+      const response = await signIn({ email, password });
+      if(!response){
+        setCargando(false)
+
+        iniciarSesion()
+      }
+
     } catch (error) {
-      console.log("🚀 ~ file: Login.jsx:24 ~ iniciarSesion ~ error", error)
       ToastAndroid.showWithGravity(
         'Ha ocurrido un error interno',
         ToastAndroid.SHORT,
         ToastAndroid.CENTER,
       );
+    }finally {
+      setCargando(false)
     }
   }
 
@@ -33,6 +46,21 @@ export const Login = () => {
     setEmail(null);
     setPassword(null);
   }
+
+  const isEmail = () => {
+    const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if(email){
+
+      if (!email.match(validRegex)) {
+        setEmailErrorMessage('Correo electrónico invalido');
+        return false;
+      } else {
+        setEmailErrorMessage();
+        return true;
+      }
+    }
+  };
+
 
   useEffect(() => {
     if (mensajeError.length === 0) return;
@@ -51,49 +79,81 @@ export const Login = () => {
       ]
     )
   }, [mensajeError])
+  
+  useEffect(() => {
+    if(!emailErrorMessage && password){
+      setvalidLogin(true)
+    }else {
+      setvalidLogin(false)
+    }
+  
 
+  }, [email, password])
+  
   return (
     <View style={styles.container}>
-      <View style={{ ...styles.body, flex: 4 }}>
-        <Image
-          style={{ ...styles.image, width: '80%', height: '80%' }}
-          source={require('../img/login.png')} />
-        <Text style={styles.titleText}>Iniciar sesión</Text>
-      </View>
-      <View style={{ ...styles.foobar, flex: 2 }} >
+      <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={styles.imageBackground}>
+        <View style={styles.body} >
+          <Text style={styles.titleText}>Iniciar sesión</Text>
+          <Input
+            onChangeText={setEmail}
+            value={email}
+            autoCapitalize='none'
+            placeholder={emailErrorMessage ? emailErrorMessage: "Correo electrónico"}
+            keyboardType="email-address"
+            inputMode="email"
+            textAlign='center'
+            style={styles.input}
+            onBlur={() => isEmail()}
+            errorMessage={emailErrorMessage}
+            leftIcon={emailErrorMessage ? <Icon name="information-outline" type='material-community' size={20} color='white' /> : ''}
+            errorStyle={emailErrorMessage ? stylesRegistro.errorStyle : null}
+            label="Correo electrónico"
+            labelStyle={{ color: 'white' }}
+            inputContainerStyle={emailErrorMessage ? styles.inputContainerError : styles.inputContainer}
+            onFocus={() => { setEmailErrorMessage("")}}
 
-        <TextInput
-          onChangeText={setEmail}
-          value={email}
-          placeholder="Correo electrónico"
-          keyboardType="email-address"
-          inputMode="email"
-          textAlign='center'
-          style={styles.input}
-        />
-        <TextInput
-          onChangeText={setPassword}
-          value={password}
-          style={styles.input}
-          textAlign='center'
-          placeholder="Contraseña"
-          autoCapitalize="none"
-          autoCorrect={false}
-          textContentType="newPassword"
-          secureTextEntry
-          enablesReturnKeyAutomatically
-        />
-        <Button
-          title="Iniciar sesión"
-          onPress={iniciarSesion}
-          buttonStyle={styles.buttonPrimary}
-          disabledStyle={styles.buttonPrimaryDisabled}
-          loading={cargando}
-          disabled={cargando}
-          radius="lg"
-          containerStyle={styles.buttonContainer}
-        />
-      </View>
+          />
+          <Input
+            onChangeText={setPassword}
+            value={password}
+            style={styles.input}
+            textAlign='center'
+            placeholder="******"
+            autoCapitalize="none"
+            autoCorrect={false}
+            textContentType="newPassword"
+            secureTextEntry
+            enablesReturnKeyAutomatically
+            label="Contraseña"
+            labelStyle={{ color: 'white' }}
+            inputContainerStyle={styles.inputContainer}
+
+          />
+          <Button
+            title="Continuar"
+            onPress={iniciarSesion}
+            buttonStyle={styles.buttonPrimary}
+            disabledStyle={styles.buttonPrimaryDisabled}
+            loading={cargando}
+            disabled={!validLogin}
+            radius="lg"
+            containerStyle={styles.buttonContainer}
+          />
+        </View>
+
+      </ImageBackground>
     </View>
   )
 }
+
+const stylesRegistro = StyleSheet.create({
+  errorStyle: {
+    color: 'white',
+    textAlign: 'center',
+    borderRadius: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize:14,
+  },
+});

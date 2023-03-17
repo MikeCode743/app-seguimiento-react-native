@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, ImageBackground, Linking, StyleSheet, Text, View } from 'react-native'
 import { PermissionContext } from '../context/Permission/PermissionContext';
 import { Button } from '@rneui/base'
 import { Loading } from '../components/Loading';
 import { styles } from '../styles/style';
+import { useCallback } from 'react';
 
 export const Permisos = ({ navigation }) => {
   const { permissions, askLocationPermissions } = useContext(PermissionContext)
@@ -13,42 +14,52 @@ export const Permisos = ({ navigation }) => {
     return <Loading />;
   }
 
-  if (permissions.locationStatus === 'never_ask_again') setBlocked(true);
+  const OpenSettingsButton = ({ children }) => {
+    const handlePress = useCallback(async () => {
+      await Linking.openSettings();
+    }, []);
 
+    return <Button title={children} onPress={handlePress} />;
+  };
 
   return (
     <View style={styles.container}>
-      <View style={{...styles.body, flex: 4}}>
+      <ImageBackground source={require('../img/loginBackground.jpg')} resizeMode="cover" style={{
+        flex: 1,
+        justifyContent: 'center',
+      }}>
 
-        <Image
-          source={require('../img/permiso/map-pointer.png')}
-          style={{ ...styles.image, width: '80%', height: '80%' }}
-        />
-        <Text style={styleText.titleText}>
-          Habilitar Geolocalización
-        </Text>
-        <Text style={styleText.subtitleText}>
-          Permitiendo la geolocalización podras registrar tu recorrido, seleccionar tu medio de desplazamiento y otras funcionalidades.
-        </Text>
-      </View>
-      <View style={{...styles.foobar, alignItems:'center', justifyContent:'center'}} >
+        <View style={{ ...styles.body, flex: 4 }}>
+
+          <Image
+            source={require('../img/permiso/map-pointer.png')}
+            style={{ ...styles.image, width: '80%', height: '80%' }}
+          />
+          <Text style={styleText.titleText}>
+            Habilitar Geolocalización
+          </Text>
+          <Text style={styleText.subtitleText}>
+            Permitiendo la geolocalización podras registrar tu recorrido, seleccionar tu medio de desplazamiento y otras funcionalidades.
+          </Text>
+        </View>
+        <View style={{ ...styles.foobar, alignItems: 'center', justifyContent: 'center' }} >
 
 
-        {
-          !blocked
-            ? <Button
-              title='Permitir geolocalización'
-              onPress={askLocationPermissions}
-              buttonStyle={styles.buttonPrimary}
-              containerStyle={styles.buttonContainer}
-              radius="lg"
-            />
-            : <Button
-              title='GPS bloqueado'
-              onPress={() => console.log("object")}
-            />
-        }
-      </View>
+          {
+            permissions.locationStatus !== 'never_ask_again'
+              ? <Button
+                title='Permitir geolocalización'
+                onPress={askLocationPermissions}
+                buttonStyle={styles.buttonPrimary}
+                containerStyle={styles.buttonContainer}
+                radius="lg"
+              />
+              : <OpenSettingsButton>Habilitar permisos</OpenSettingsButton>
+
+
+          }
+        </View>
+      </ImageBackground>
 
     </View>
   )
@@ -60,6 +71,7 @@ const styleText = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 10,
+    color: 'white'
   },
   subtitleText: {
     fontSize: 15,
@@ -67,7 +79,7 @@ const styleText = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 30,
     marginHorizontal: 20,
-    color: 'gray',
+    color: 'white',
   },
   image: {
     resizeMode: 'contain',

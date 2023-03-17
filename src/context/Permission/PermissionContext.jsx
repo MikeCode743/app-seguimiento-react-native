@@ -1,8 +1,10 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import { AppState, PermissionsAndroid } from "react-native";
 
 export const permissionsInitState = {
-    locationStatus: 'unavailable'
+    locationStatus: 'unavailable',
+    locationBackground: 'unavailable',
+    intentos: 0,
 }
 
 export const PermissionContext = createContext({});
@@ -27,20 +29,45 @@ export const PermissionsProvider = ({ children }) => {
             //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
             // ])
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                setPermissions({
-                    ...permissions,
-                    locationStatus: 'granted'
-                })
+                const grantedBackground = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+                    )
+                    if (grantedBackground === PermissionsAndroid.RESULTS.GRANTED) {
+                        setPermissions({
+                            ...permissions,
+                            locationStatus: 'granted',
+                            locationBackground: 'granted',
+                            intentos: 0,
+                        })
+                    }
+                    setPermissions({
+                        ...permissions,
+                        locationStatus: 'granted',
+                        intentos: 0,
+        
+                    })
+
             } else if (PermissionsAndroid.RESULTS.DENIED === granted) {
                 setPermissions({
                     ...permissions,
-                    locationStatus: 'denied'
+                    locationStatus: 'denied',
+                    intentos: permissions.intentos + 1,
+
                 })
-            } else {
-                setPermissions({
-                    ...permissions,
-                    locationStatus: 'never_ask_again'
-                })
+            } else if (PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN === granted) {
+                if (permissions.intentos < 1){
+                    setPermissions({
+                        ...permissions,
+                        locationStatus: 'denied',
+                        intentos: permissions.intentos + 1, 
+                    })
+                }else {
+                    setPermissions({
+                        ...permissions,
+                        locationStatus: 'never_ask_again',
+                        intentos: 0,
+                    })
+                }
                 
             }
         } catch (err) {
@@ -85,6 +112,7 @@ export const PermissionsProvider = ({ children }) => {
         };
     }, []);
 
+    
 
     return (
         <PermissionContext.Provider value={{

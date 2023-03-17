@@ -24,26 +24,41 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await http_axios('/api/sanctum/token', params, 'post');
             const token = response?.token;
-            dispatch({ type: 'signIn', payload: { token } });
-            await AsyncStorage.setItem('token', token)
-            ToastAndroid.showWithGravity(
-                'Inicio de sesión satisfactoriamente',
-                ToastAndroid.LONG,
-                ToastAndroid.CENTER,
-            );
+            console.log("🚀 ~ file: AuthContext.jsx:27 ~ signIn ~ token:", token)
+            
+            if (token){
+                dispatch({ type: 'signIn', payload: { token } });
+                await AsyncStorage.setItem('token', token)
+                return true;
+            }
+            return false;
         } catch (error) {
-            // console.log(JSON.stringify(error,null, 2));
             dispatch({
                 type: 'error', payload: {
-                    mensaje: error.data?.message || 'Credenciales incorrectas'
+                    mensaje: 'Credenciales incorrectas. correo o contraseña invalidas'
                 }
             });
-            
+            dispatch({ type: 'logout' });
+            await AsyncStorage.removeItem('token')
+            return true;
         }
     }
 
-    const logout = () => {
-        dispatch({ type: 'logout' });
+    const logout = async() => {
+        try {
+            await http_axios('/api/token', null, 'delete', null)
+        } catch (error) {
+            ToastAndroid.showWithGravity(
+                'Lo sentimos, algo salio mal.',
+                ToastAndroid.LONG,
+                ToastAndroid.CENTER,
+            );
+        } finally {
+            await AsyncStorage.removeItem('token')
+            dispatch({ type: 'logout' });
+        }
+
+
     }
 
     const cleanError = () => {
@@ -57,7 +72,7 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: 'signIn', payload: { token } })
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
             ToastAndroid.showWithGravity(
                 'Sin autenticacion',
                 ToastAndroid.SHORT,

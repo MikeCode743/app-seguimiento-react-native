@@ -1,21 +1,27 @@
+/* eslint-disable prettier/prettier */
 import axios from 'axios';
 import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export const http_axios = async (url, params, method = 'get', data) => {
+  const baseURL = API_URL||'http://45.33.119.69:8100';
+  console.log("RUTA", baseURL+url)
 
-export const http_axios = async (url, params, method = 'get') => {
-  const baseURL = API_URL;
+  const headers = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    timeout: 10000,
+  };
 
-  const token = await AsyncStorage.getItem('token')
-
+  const token = await AsyncStorage.getItem('token');
+  
+  if (token !== null) {
+    headers.Authorization = `Bearer ${token}`;
+  }
 
   const instance = axios.create({
     baseURL,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
   });
 
   return new Promise((resolve, reject) => {
@@ -27,12 +33,13 @@ export const http_axios = async (url, params, method = 'get') => {
             resolve(response.data);
           })
           .catch(err => {
+            console.log("🚀 ~ file: axios.js:37 ~ returnnewPromise ~ err.response:", JSON.stringify(err.response))
             reject(err.response);
           });
 
       case 'post':
         return instance
-          .post(url, params)
+          .post(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })
@@ -42,7 +49,7 @@ export const http_axios = async (url, params, method = 'get') => {
 
       case 'put':
         return instance
-          .post(url, params)
+          .put(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })
@@ -52,7 +59,7 @@ export const http_axios = async (url, params, method = 'get') => {
 
       case 'delete':
         return instance
-          .post(url, params)
+          .delete(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })
@@ -62,7 +69,7 @@ export const http_axios = async (url, params, method = 'get') => {
 
       case 'patch':
         return instance
-          .post(url, params)
+          .patch(url, {...params, ...data})
           .then(response => {
             resolve(response.data);
           })

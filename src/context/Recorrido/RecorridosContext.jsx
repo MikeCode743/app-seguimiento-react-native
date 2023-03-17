@@ -3,26 +3,30 @@ import { recorridosReducer } from "./recorridosReducer";
 
 export const RecorridosContext = createContext({});
 
-const recorridoInicial = {
-    listado: [],
+const desplazamientoInicial = {
+    uuid: null,
+    desplazamiento: [],
+    cantidadPuntos: 0,
+    ultimoPunto: {},
     ultimaActualizacion: undefined,
 }
 
-export const RecorridosProvider = ({children}) => {
-    const [recorridosState, dispatch] = useReducer(recorridosReducer,recorridoInicial );
+export const RecorridosProvider = ({ children }) => {
+    const [desplazamientoState, dispatch] = useReducer(recorridosReducer, desplazamientoInicial);
 
-    const obtenerRecorrido = () => {
-        dispatch({ type: 'obtener' });
+    const insertarPunto = (point) =>{
+        dispatch({ type: 'insertar', payload: point })
     }
-    const actualizarRecorrido = (data) => {
-        dispatch({ type: 'actualizar-recorrido', payload: data });
+
+    const restaurar = () => {
+        dispatch({ type: 'restaurar'})
     }
 
     return (
         <RecorridosContext.Provider value={{
-            recorridosState,
-            obtenerRecorrido,
-            actualizarRecorrido,
+            desplazamientoState,
+            insertarPunto,
+            restaurar
         }}>
             {children}
         </RecorridosContext.Provider>

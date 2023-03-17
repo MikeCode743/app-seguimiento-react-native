@@ -6,6 +6,7 @@ import { Icon } from '@rneui/themed';
 import { styles } from '../styles/style'
 import { useEffect } from 'react';
 import { createTable } from '../config/database';
+import { AccountComponent } from '../components/AccountComponent';
 
 
 export const PanelPrincipal = ({ navigation }) => {
@@ -18,6 +19,7 @@ export const PanelPrincipal = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+            <AccountComponent/>
             <Pressable
                 onPress={() => navigation.navigate('MediosDesplazamiento')}
                 style={{

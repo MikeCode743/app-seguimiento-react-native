@@ -1,8 +1,7 @@
 import {http_axios} from '../config/axios';
 
-const login = async params =>
-  await http_axios.post('/api/sanctum/token', {}, params);
+export const register = async (params, data) =>
+  await http_axios('/api/usuario', params, 'post', data);
 
-export default {
-  login,
-};
+export const account = async (params, data) =>
+  await http_axios('/api/user', params, 'get', data);

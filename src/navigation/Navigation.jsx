@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Home } from '../views/Home';
-import { MapPage } from '../views/MapPage';
+import { Desplazamiento } from '../views/Desplazamiento';
 import { Permission } from '../views/Permission';
 import { PermissionContext } from '../context/Permission/PermissionContext';
 import { Loading } from '../components/Loading';
@@ -11,6 +11,9 @@ import { Login } from '../views/Login';
 import { AuthContext } from '../context/Auth/AuthContext';
 import { PanelPrincipal } from '../views/PanelPrincipal';
 import { MediosDesplazamiento } from '../views/MediosDesplazamiento';
+import { Registrarse } from '../views/Registrarse';
+import { FormularioRegistro } from '../views/FormularioRegistro';
+import { TabNavegacion } from './TabNavegacion';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,7 +36,6 @@ export const Navigation = () => {
 
     const { permissions, checkLocationPermission } = useContext(PermissionContext);
     const { autenticado } = useContext(AuthContext);
-    console.log("🚀 ~ file: Navigation.jsx:34 ~ Navigation ~ authState", autenticado)
 
     useEffect(() => {
         checkLocationPermission()
@@ -51,13 +53,12 @@ export const Navigation = () => {
                         {
                             (autenticado === 'autenticado')
                                 ? <Stack.Group >
-                                    <Stack.Screen name='PanelPrincipal' component={PanelPrincipal} />
-                                    <Stack.Screen name='MapPage' component={MapPage} />
-                                    <Stack.Screen name='MediosDesplazamiento' component={MediosDesplazamiento} />
+                                    <Stack.Screen name='TabNavegacion' component={TabNavegacion} />
                                 </Stack.Group>
                                 : <Stack.Group >
                                     <Stack.Screen name='Home' component={Home} />
                                     <Stack.Screen name='Login' component={Login} />
+                                    <Stack.Screen name='FormularioRegistro' component={FormularioRegistro} />
                                 </Stack.Group>
                         }
 
