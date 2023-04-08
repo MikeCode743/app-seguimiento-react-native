@@ -45,19 +45,19 @@ export const FormularioRegistro = ({ route, navigation }) => {
       setCargando(true);
       if (comparePassword()) {
         const { usuario, estado_cuenta } = await register(null, data);
-        // if (estado_cuenta === 'En revisión') {
-        //   ToastAndroid.showWithGravity(
-        //     'Cuenta en revisión',
-        //     ToastAndroid.SHORT,
-        //     ToastAndroid.CENTER,
-        //   );
-        // } else if (estado_cuenta === 'Activa') {
-        // }
-        ToastAndroid.showWithGravity(
-          'Cuenta en creada con exito',
-          ToastAndroid.LONG,
-          ToastAndroid.CENTER,
-        );
+        if (estado_cuenta === 'En revisión') {
+          ToastAndroid.showWithGravity(
+            'Cuenta con estado de revisión',
+            ToastAndroid.SHORT,
+            ToastAndroid.CENTER,
+          );
+        } else if (estado_cuenta === 'Activa') {
+          ToastAndroid.showWithGravity(
+            'Cuenta creada con exito',
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+          );
+        }
         navigation.navigate('Login');
       } else {
         inputPassword.current.focus();
@@ -65,10 +65,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
         inputPasswordConfirm.current.clear();
       }
     } catch (error) {
-      console.error(
-        '🚀 ~ file: Login.jsx:24 ~ registrar ~ error',
-        JSON.stringify(error.data.message),
-      );
+
       ToastAndroid.showWithGravity(
         `${error.data.message}`,
         ToastAndroid.SHORT,
@@ -95,7 +92,7 @@ export const FormularioRegistro = ({ route, navigation }) => {
 
   const isEmail = () => {
     if(email){
-      const validRegex = /^[a-zA-Z0-9_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      const validRegex = /^[a-zA-Z0-9._]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!email.match(validRegex)) {
         setEmailErrorMessage('Ingrese un correo electrónico valido');
         return false;
@@ -136,9 +133,9 @@ export const FormularioRegistro = ({ route, navigation }) => {
   };
 
   const cleanForm = () => {
-    setEmail(null);
     setPassword(null);
     setPasswordConfirm(null);
+    setRol()
   };
 
   const matchPassword = () => {

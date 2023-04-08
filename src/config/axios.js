@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const http_axios = async (url, params, method = 'get', data) => {
   const baseURL = API_URL||'http://45.33.119.69:8100';
-  console.log("RUTA", baseURL+url)
 
   const headers = {
     Accept: 'application/json',
@@ -33,7 +32,6 @@ export const http_axios = async (url, params, method = 'get', data) => {
             resolve(response.data);
           })
           .catch(err => {
-            console.log("🚀 ~ file: axios.js:37 ~ returnnewPromise ~ err.response:", JSON.stringify(err.response))
             reject(err.response);
           });
 
@@ -44,7 +42,7 @@ export const http_axios = async (url, params, method = 'get', data) => {
             resolve(response.data);
           })
           .catch(err => {
-            reject(err.response);
+            reject(err);
           });
 
       case 'put':

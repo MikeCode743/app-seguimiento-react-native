@@ -66,7 +66,6 @@ export const Desplazamiento = () => {
       },
       error => {
         // See error code charts below.
-        console.error(error.code, error.message);
       },
       {
         enableHighAccuracy: true,
@@ -91,11 +90,9 @@ export const Desplazamiento = () => {
           Geolocation.getCurrentPosition(
             position => {
               setPosition(position);
-              console.log(position);
             },
             error => {
               // See error code charts below.
-              console.error(error.code, error.message);
             },
             {
               enableHighAccuracy: true,
@@ -127,7 +124,6 @@ export const Desplazamiento = () => {
         setData([...data, position]);
       },
       error => {
-        console.error(error.code, error.message);
       },
       {
         enableHighAccuracy: true,
@@ -246,7 +242,6 @@ export const Desplazamiento = () => {
   //Detectar cambios de la posicion
   useEffect(() => {
     if (position) {
-      console.log("🚀 NEW POINT")
       const point = {
         latitud: position.coords.latitude,
         longitud: position.coords.longitude,

@@ -26,7 +26,6 @@ const getIncidentes = async () => {
       inserting_incidentes.join(' '),
     );
     if (result.rowsAffected === 1) {
-      console.log('Data Insertada correctamente incidentes');
     }
   }
 

@@ -10,10 +10,8 @@ export const createTableMarcadores = () => {
             );`,
             [],
             (sqlTxn, result) => {
-                console.log('Table created successfully tbl_marcadores');
             },
             error => {
-                console.log('Error creating table ' + JSON.stringify(error));
             },
         );
     });
@@ -51,11 +49,9 @@ export const storeCatalogoMarcadores = (marcadores) => {
                 `INSERT INTO tbl_marcadores (id, nombre, icono) VALUES ${sql} ;`,
                 [],
                 (sqlTxn, result) => {
-                    console.log("🚀 ~ file: TblDesplazamientos.jsx:40 ~ addItemDesplazamiento ~ result:", result)
                     resolve(result)
                 },
                 error => {
-                    console.error('error inserting data ' + JSON.stringify(error));
                     reject(error)
                 },
             );

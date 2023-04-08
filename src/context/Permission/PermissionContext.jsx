@@ -29,17 +29,17 @@ export const PermissionsProvider = ({ children }) => {
             //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
             // ])
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                const grantedBackground = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
-                    )
-                    if (grantedBackground === PermissionsAndroid.RESULTS.GRANTED) {
-                        setPermissions({
-                            ...permissions,
-                            locationStatus: 'granted',
-                            locationBackground: 'granted',
-                            intentos: 0,
-                        })
-                    }
+                // const grantedBackground = await PermissionsAndroid.request(
+                //     PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION,
+                //     )
+                //     if (grantedBackground === PermissionsAndroid.RESULTS.GRANTED) {
+                //         setPermissions({
+                //             ...permissions,
+                //             locationStatus: 'granted',
+                //             locationBackground: 'granted',
+                //             intentos: 0,
+                //         })
+                //     }
                     setPermissions({
                         ...permissions,
                         locationStatus: 'granted',
@@ -71,7 +71,6 @@ export const PermissionsProvider = ({ children }) => {
                 
             }
         } catch (err) {
-            console.warn(err)
         }
 
 

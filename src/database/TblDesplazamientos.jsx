@@ -12,10 +12,8 @@ export const createTableDesplazamiento = () => {
         );`,
       [],
       (sqlTxn, result) => {
-        console.log('Table created successfully tbl_desplazamiento');
       },
       error => {
-        console.log('Error creating table ' + error[0]);
       },
     );
   });
@@ -31,10 +29,9 @@ export const addItemDesplazamiento = (data) => {
       `INSERT INTO tbl_desplazamiento (uuid, desplazamiento, enviado, activo, fecha_registro) VALUES (?, ?, ?, ?, ?);`,
       [data.uuid, data.desplazamiento, 0, 1, data.fecha_registro],
       (sqlTxn, result) => {
-        console.log("🚀 ~ file: TblDesplazamientos.jsx:40 ~ addItemDesplazamiento ~ result:", result)
       },
       error => {
-        console.error('error inserting data ' + JSON.stringify(error));      },
+             },
     );
   });
 };
@@ -70,7 +67,6 @@ export const removeDesplazamiento = (uuid) => {
         `DELETE FROM tbl_desplazamiento WHERE uuid = ?;`,
         [uuid],
         (transaction, res) => {
-          console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
           resolve(res);
         },
         () => {
@@ -91,7 +87,6 @@ export const sendDesplazamiento = (uuid) => {
          WHERE uuid = ?;`,
         [uuid],
         (transaction, res) => {
-          console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
           resolve(res);
         },
         () => {
@@ -109,7 +104,23 @@ export const getLastDesplazamiento = () => {
         `SELECT * FROM tbl_desplazamiento ORDER BY fecha_registro DESC LIMIT 1`,
         [],
         (transaction, res) => {
-          console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
+          resolve(res);
+        },
+        () => {
+          reject(false);
+        },
+      );
+    });
+  });
+};
+
+export const removeDesplazamientos = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `DELETE FROM tbl_desplazamiento;`,
+        [],
+        (transaction, res) => {
           resolve(res);
         },
         () => {

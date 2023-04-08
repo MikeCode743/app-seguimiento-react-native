@@ -45,7 +45,6 @@ export const ListadoDesplazamiento = () => {
       mostrarNotificacion(mensaje)
 
     } catch (error) {
-      console.error(error)
       reset()
 
     }
@@ -60,7 +59,6 @@ export const ListadoDesplazamiento = () => {
       mostrarNotificacion(mensaje)
 
     } catch (error) {
-      console.error(error)
       reset()
     }
   }
@@ -74,7 +72,6 @@ export const ListadoDesplazamiento = () => {
         uuid: item.uuid,
         desplazamiento: JSON.parse(item.desplazamiento)
       }
-      console.log(JSON.stringify(data, null, 3));
       //Enviardo al backend
       await postDesplazamiento(data)
       //Actualizado en la base de datos local SQLITE
@@ -83,7 +80,6 @@ export const ListadoDesplazamiento = () => {
       reset()
       mostrarNotificacion(mensaje)
     } catch (error) {
-      console.error(error);
       reset()
     } finally {
       setCargando(false)
@@ -91,19 +87,16 @@ export const ListadoDesplazamiento = () => {
   }
 
   const enviarReporteIncidente = async (item, reset) => {
-    console.log("🚀 ~ file: ListadoDesplazamiento.jsx:94 ~ enviarReporteIncidente ~ item:", item)
     const mensaje = 'Incidente enviado exitosamente.';
 
     try {
       setCargando(true)
-      console.log("🚀 ~ file: ListadoDesplazamiento.jsx:110 ~ enviarReporteIncidente ~ item:", item)
       await postIncidente(item)
       await enviarIncidente(item.id)
       items();
       reset()
       mostrarNotificacion(mensaje)
     } catch (error) {
-      console.error(error);
       reset()
     } finally {
       setCargando(false)

@@ -10,10 +10,8 @@ export const createTableIncidentes = () => {
             );`,
             [],
             (sqlTxn, result) => {
-                console.log('Table created successfully tbl_incidente');
             },
             error => {
-                console.log('Error creating table ' + JSON.stringify(error));
             },
         );
     });
@@ -51,11 +49,9 @@ export const storeCatalogoIncidentes = (incidentes) => {
                 `INSERT INTO tbl_incidente (id, nombre, icono) VALUES ${sql} ;`,
                 [],
                 (sqlTxn, result) => {
-                    console.log("🚀 ~ file: TblDesplazamientos.jsx:40 ~ addItemDesplazamiento ~ result:", result)
                     resolve(result)
                 },
                 error => {
-                    console.error('error inserting data ' + JSON.stringify(error));
                     reject(error)
                 },
             );
@@ -81,10 +77,8 @@ export const createTableReporteIncidentes = () => {
             );`,
             [],
             (sqlTxn, result) => {
-                console.log('Table created successfully tbl_reporte_incidente');
             },
             error => {
-                console.log('Error creating table ' + JSON.stringify(error));
             },
         );
     });
@@ -123,7 +117,6 @@ export const storeReporteIncidente = (data) => {
                     resolve(result)
                 },
                 error => {
-                    console.error('error inserting data ' + JSON.stringify(error));
                     reject(error)
                 },
             );
@@ -141,7 +134,6 @@ export const deleteReporteIncidente = (id) => {
                     resolve(result)
                 },
                 error => {
-                    console.error('error inserting data ' + JSON.stringify(error));
                     reject(error)
                 },
             );
@@ -159,7 +151,6 @@ export const enviarIncidente = (id) => {
                 WHERE id = ?;`,
                 [id],
                 (transaction, res) => {
-                    console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
                     resolve(res);
                 },
                 () => {
@@ -179,7 +170,6 @@ export const dropIncidentes = () => {
                 `,
                 [],
                 (transaction, res) => {
-                    console.log("🚀 ~ file: TblIncidentes.jsx:182 ~ returnnewPromise ~ res:", res)
                     resolve(res);
                 },
                 () => {
@@ -187,5 +177,23 @@ export const dropIncidentes = () => {
                 },
             );
         });
+    });
+}
+
+export const deleteReporteIncidentes = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `DELETE FROM tbl_reporte_incidente;`,
+                [],
+                (sqlTxn, result) => {
+                    resolve(result)
+                },
+                error => {
+                    reject(error)
+                },
+            );
+        });
+
     });
 }

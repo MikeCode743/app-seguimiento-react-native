@@ -4,6 +4,10 @@ import { http_axios } from '../../config/axios';
 import { authReducer } from './authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ToastAndroid } from 'react-native';
+import { deleteReporteIncidentes } from '../../database/TblIncidentes';
+import { removeDesplazamientos } from '../../database/TblDesplazamientos';
+
+
 
 export const authInitialState = {
     autenticado: 'verificar',
@@ -24,7 +28,6 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await http_axios('/api/sanctum/token', params, 'post');
             const token = response?.token;
-            console.log("🚀 ~ file: AuthContext.jsx:27 ~ signIn ~ token:", token)
             
             if (token){
                 dispatch({ type: 'signIn', payload: { token } });
@@ -33,11 +36,20 @@ export const AuthProvider = ({ children }) => {
             }
             return false;
         } catch (error) {
-            dispatch({
-                type: 'error', payload: {
-                    mensaje: 'Credenciales incorrectas. correo o contraseña invalidas'
-                }
-            });
+            if(error.response.status === 422){
+                dispatch({
+                    type: 'error', payload: {
+                        mensaje: error.response.data.message
+                    }
+                });
+            }else{
+
+                dispatch({
+                    type: 'error', payload: {
+                        mensaje: 'Credenciales incorrectas. correo o contraseña invalidas'
+                    }
+                });
+            }
             dispatch({ type: 'logout' });
             await AsyncStorage.removeItem('token')
             return true;
@@ -47,6 +59,8 @@ export const AuthProvider = ({ children }) => {
     const logout = async() => {
         try {
             await http_axios('/api/token', null, 'delete', null)
+            await deleteReporteIncidentes();
+            await removeDesplazamientos();
         } catch (error) {
             ToastAndroid.showWithGravity(
                 'Lo sentimos, algo salio mal.',
@@ -72,7 +86,6 @@ export const AuthProvider = ({ children }) => {
             dispatch({ type: 'signIn', payload: { token } })
 
         } catch (error) {
-            console.error(error);
             ToastAndroid.showWithGravity(
                 'Sin autenticacion',
                 ToastAndroid.SHORT,

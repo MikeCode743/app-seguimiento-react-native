@@ -10,10 +10,8 @@ export const createTableMediosDesplazamiento = () => {
             );`,
             [],
             (sqlTxn, result) => {
-                console.log('Table created successfully tbl_medios_desplazamiento');
             },
             error => {
-                console.log('Error creating table ' + JSON.stringify(error));
             },
         );
     });
@@ -51,11 +49,9 @@ export const storeCatalogoMediosDesplazamientos = (medios_desplazamiento) => {
                 `INSERT INTO tbl_medios_desplazamiento (id, nombre, icono) VALUES ${sql} ;`,
                 [],
                 (sqlTxn, result) => {
-                    console.log("🚀 ~ file: TblDesplazamientos.jsx:40 ~ addItemDesplazamiento ~ result:", result)
                     resolve(result)
                 },
                 error => {
-                    console.error('error inserting data ' + JSON.stringify(error));
                     reject(error)
                 },
             );
@@ -73,7 +69,6 @@ export const dropMediosDesplazamientos = () => {
                 `,
                 [],
                 (transaction, res) => {
-                    console.log("🚀 ~ file: TblDesplazamientos.jsx:81 ~ returnnewPromise ~ res:", res)
                     resolve(res);
                 },
                 () => {

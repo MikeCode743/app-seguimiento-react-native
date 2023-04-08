@@ -24,9 +24,9 @@ export const Home = ({ navigation }) => {
 
                 <View style={styles.body}>
                     <Image
-                        style={{ ...styles.image, width: '80%', height: '80%' }}
-                        source={require('../img/minerva2.png')} />
-                    <Text style={styles.titleText}>Desplazamientos APP</Text>
+                        style={{ ...styles.image, width: '100%', height: '100%' }}
+                        source={require('../img/logo.png')} />
+                    <Text style={{...styles.titleText, marginBottom:50}}>REGISTRACKER</Text>
                 </View>
                 <View style={
                     styles.foobar

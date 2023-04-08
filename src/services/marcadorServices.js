@@ -23,7 +23,6 @@ const getMarcadores = async () => {
         inserting_marcadores.join(' '),
       );
       if (result.rowsAffected === 1) {
-        console.log('Data Insertada correctamente');
       }
     }
   }

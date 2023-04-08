@@ -9,6 +9,7 @@ import { dropMediosDesplazamientos } from '../database/TblMediosDesplazamientos'
 import { dropIncidentes } from '../database/TblIncidentes';
 import { Switch } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { format } from 'date-fns';
 
 
 export const Ajustes = () => {
@@ -24,6 +25,7 @@ export const Ajustes = () => {
   const [checkOpcionIncidente, setCheckOpcionIncidente] = useState()
 
   const { obtenerMediosDesplazamientos, obtenerIncidentes } = useContext(CatalogosContext)
+  const [fecha] = useState(format(new Date(), 'yyyy'))
 
   const cerrarSesion = () => {
     setLoading(true);
@@ -39,7 +41,6 @@ export const Ajustes = () => {
       await obtenerMediosDesplazamientos();
       await obtenerIncidentes();
     } catch (error) {
-      console.error(error)
     }
     finally {
       setSincronizarLoading(false)
@@ -166,6 +167,12 @@ export const Ajustes = () => {
           }
           iconRight
         />
+        <View style={{marginTop:10, justifyContent:'center', alignContent:'center'}}>
+
+                    <Text style={{color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign:'center' }}>© { fecha } Universidad de El Salvador.</Text>
+                    <Text style={{ color: 'gray', fontSize: 14, fontWeight: 'normal', textAlign:'center' }}>Todos los derechos reservados</Text>
+        </View>
+
       </View>
       <Modal
         animationType="fade"
@@ -179,7 +186,8 @@ export const Ajustes = () => {
         <View style={stylesAjustes.centeredView}>
           <View style={stylesAjustes.modalView}>
             <Text style={{ ...styles.titleText, color: primary, fontSize: 20 }}>Cerrar sesión</Text>
-            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 16, marginBottom: 20, fontWeight: 'normal' }}>¿Seguro de cerrar sesión?</Text>
+            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 16, fontWeight: 'normal' }}>¿Seguro de cerrar sesión?</Text>
+            <Text style={{ ...styles.titleText, color: 'gray', fontSize: 14, fontWeight: 'normal' }}>Cualquier registros no sincronizado se perderá</Text>
             <View style={{
               flexDirection: 'row'
             }}>
@@ -188,8 +196,8 @@ export const Ajustes = () => {
                   <ActivityIndicator size="large" color={styles.primary} />
                 ) : (
                   <>
-                    <Button title="Sí, seguro" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { cerrarSesion() }} />
-                    <Button title="Cancelar" type="clear" titleStyle={{ color: primary }} onPress={() => { setModalVisible(!modalVisible) }} />
+                    <Button title="Sí, seguro" type="clear" titleStyle={{ color: primary }} onPress={() => { cerrarSesion() }} />
+                    <Button title="Cancelar" type="clear" titleStyle={{ color: 'gray' }} onPress={() => { setModalVisible(!modalVisible) }} />
                   </>
                 )
               }
